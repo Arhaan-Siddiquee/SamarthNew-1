@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { FaHome, FaAmbulance, FaQueue, FaRobot, FaHeartbeat, FaUser } from "react-icons/fa"; // Importing Icons
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,7 +14,7 @@ const Navbar = () => {
           to="/"
           className="text-white text-lg sm:text-xl font-bold hover:underline transition"
         >
-          सmarth
+          <FaHome /> {/* Home Icon */}
         </Link>
 
         {/* Hamburger Icon */}
@@ -50,32 +51,45 @@ const Navbar = () => {
         <div
           className={`${
             isMenuOpen ? "block" : "hidden"
-          } sm:flex sm:space-x-6 absolute sm:static top-16 sm:top-auto left-0 sm:left-auto bg-gradient-to-r sm:bg-transparent from-green-900 to-green-600 sm:rounded-none rounded-lg p-6 sm:p-0 w-full sm:w-auto shadow-lg sm:shadow-none`}
+          } sm:flex absolute sm:static top-16 sm:top-auto left-0 sm:left-auto bg-gradient-to-r sm:bg-transparent from-green-900 to-green-600 sm:rounded-none rounded-lg p-6 sm:p-0 w-full sm:w-auto shadow-lg sm:shadow-none justify-between`}
         >
-          <Link
-            to="/emergency-services"
-            className="block sm:inline text-white hover:underline transition mb-2 sm:mb-0"
-          >
-            Emergency
-          </Link>
-          <Link
-            to="/real-time-queue"
-            className="block sm:inline text-white hover:underline transition mb-2 sm:mb-0"
-          >
-            Queue
-          </Link>
-          <Link
-            to="/chatbot"
-            className="block sm:inline text-white hover:underline transition mb-2 sm:mb-0"
-          >
-            Chatbot
-          </Link>
-          <Link
-            to="/disease-prediction"
-            className="block sm:inline text-white hover:underline transition"
-          >
-            Disease Prediction
-          </Link>
+          {/* Left Aligned Icons */}
+          <div className="flex sm:space-x-6">
+            <Link
+              to="/emergency-services"
+              className="block sm:inline text-white hover:underline transition mb-2 sm:mb-0"
+            >
+              <FaAmbulance /> {/* Emergency Icon */}
+            </Link>
+            <Link
+              to="/real-time-queue"
+              className="block sm:inline text-white hover:underline transition mb-2 sm:mb-0"
+            >
+              <FaQueue /> {/* Queue Icon */}
+            </Link>
+            <Link
+              to="/chatbot"
+              className="block sm:inline text-white hover:underline transition mb-2 sm:mb-0"
+            >
+              <FaRobot /> {/* Chatbot Icon */}
+            </Link>
+          </div>
+
+          {/* Right Aligned Icons */}
+          <div className="flex sm:space-x-6 ml-auto">
+            <Link
+              to="/disease-prediction"
+              className="block sm:inline text-white hover:underline transition"
+            >
+              <FaHeartbeat /> {/* Disease Prediction Icon */}
+            </Link>
+            <Link
+              to="/account"
+              className="block sm:inline text-white hover:underline transition"
+            >
+              <FaUser /> {/* Account Icon */}
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
