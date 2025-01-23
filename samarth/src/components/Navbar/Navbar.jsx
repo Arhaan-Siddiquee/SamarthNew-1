@@ -5,7 +5,7 @@ import { Bell, User, Moon, Sun, Menu, Home, AlertCircle, MessageCircle, Activity
 const navLinks = [
   { name: "Home", path: "/", icon: <Home className="h-5 w-5 mr-2" />, isEmergency: false },
   { name: "Emergency", path: "/emergency-services", icon: <AlertCircle className="h-5 w-5 mr-2" />, isEmergency: true },
-  { name: "Queue", path: "/real-time-queue", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
+  { name: "SpecialtyAIPage", path: "/real-time-queue", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
   { name: "Chatbot", path: "/chatbot", icon: <MessageCircle className="h-5 w-5 mr-2" />, isEmergency: false },
   { name: "Disease Prediction", path: "/disease-prediction", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
 ];

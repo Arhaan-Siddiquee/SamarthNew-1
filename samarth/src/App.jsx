@@ -6,7 +6,7 @@ import SignupComponent from './components/LoginSignup/SignupComponent';
 import ProtectedRoute from './components/LoginSignup/ProtectedRoutes';
 import Home from './pages/Home';
 import EmergencyServices from './pages/EmergencyServices';
-import RealTimeQueue from './pages/RealTimeQueue';
+import SpecialtyAIPage from './pages/SpecialtyAIPage';
 import Chatbot from './pages/Chatbot';
 import DiseasePrediction from './pages/DiseasePrediction';
 import AccountComponent from './components/Account/AccountComponent';
@@ -45,7 +45,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Navbar/>
-              <RealTimeQueue />
+              <SpecialtyAIPage />
               <Footer/>
             </ProtectedRoute>
           }
