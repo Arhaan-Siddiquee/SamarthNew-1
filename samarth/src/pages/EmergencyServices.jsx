@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import Emergency3 from '../components/Emergency/Emergency3';
 import { 
   Mic, 
   MapPin, 
@@ -12,7 +13,9 @@ const SOSPage = () => {
   const [isRecording, setIsRecording] = useState(false);
 
   return (
-    <div className="min-h-screen mt-[60px] bg-red-50 p-8 flex items-center justify-center">
+    <>
+    <Emergency3/>
+    <div className="min-h-screen  bg-red-50 p-8 flex items-center justify-center">
       <motion.div 
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -73,6 +76,7 @@ const SOSPage = () => {
         </motion.div>
       </motion.div>
     </div>
+    </>
   );
 };
 

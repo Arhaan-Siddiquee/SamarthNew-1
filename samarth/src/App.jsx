@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer';
 import LoginComponent from './components/LoginSignup/LoginComponent';
 import SignupComponent from './components/LoginSignup/SignupComponent';
@@ -10,79 +9,177 @@ import SpecialtyAIPage from './pages/SpecialtyAIPage';
 import Chatbot from './pages/Chatbot';
 import DiseasePrediction from './pages/DiseasePrediction';
 import AccountComponent from './components/Account/AccountComponent';
+import LandingPage from './DocPat/LandHome'; // Import the landing page
+import Doctor from './DocPat/Doctor'; // Import the Doctor component
+import Patient from './DocPat/Patient'; // Import the Patient component
+import PropTypes from 'prop-types';
+import Navbar from './components/Navbar/Navbar';
+
+const ProtectedLayout = ({ children }) => {
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen">
+      {/* Left Navbar */}
+      <Navbar />
+
+      {/* Main Content */}
+      <div className="flex-1 md:ml-64 flex flex-col">
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </div>
+  );
+};
 
 const App = () => {
   return (
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={<LoginComponent />} />
-        <Route path="/signup" element={<SignupComponent />} />
+        <Route path="/Doctor/login" element={<LoginComponent />} />
+        <Route path="/Doctor/signup" element={<SignupComponent />} />
+        <Route path="/Doctor/login" element={<LoginComponent />} />
+        <Route path="/Doctor/signup" element={<SignupComponent />} />
+        
+        {/* Landing Page Route */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* Doctor Route (Redirect to login if not authenticated) */}
+        <Route path="/doctor" element={<Doctor />} />
+        
+        {/* Patient Route */}
+        <Route path="/patient" element={<Patient />} />
 
         {/* Protected Routes */}
         <Route
-          path="/"
+          path="/Doctor/home"
           element={
             <ProtectedRoute>
-              <Navbar/>
-              <Home />
-              <Footer/>
+              <ProtectedLayout>
+                <Home />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/emergency-services"
+          path="/doctor/emergency-services"
           element={
             <ProtectedRoute>
-              <Navbar/>
-              <EmergencyServices />
-              <Footer/>
+              <ProtectedLayout>
+                <EmergencyServices />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/real-time-queue"
+          path="/doctor/real-time-queue"
           element={
             <ProtectedRoute>
-              <Navbar/>
-              <SpecialtyAIPage />
-              <Footer/>
+              <ProtectedLayout>
+                <SpecialtyAIPage />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/chatbot"
+          path="/doctor/chatbot"
           element={
             <ProtectedRoute>
-              <Navbar/>
-              <Chatbot />
-              <Footer/>
+              <ProtectedLayout>
+                <Chatbot />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/disease-prediction"
+          path="/doctor/disease-prediction"
           element={
             <ProtectedRoute>
-              <Navbar/>
-              <DiseasePrediction />
-              <Footer/>
+              <ProtectedLayout>
+                <DiseasePrediction />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/account"
+          path="/doctor/account"
           element={
             <ProtectedRoute>
-              <Navbar/>
-              <AccountComponent />
-              <Footer/>
+              <ProtectedLayout>
+                <AccountComponent />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+
+
+
+        <Route
+          path="/patient/home"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Home />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/patient/emergency-services"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <EmergencyServices />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/patient/real-time-queue"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <SpecialtyAIPage />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/patient/chatbot"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Chatbot />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/patient/disease-prediction"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <DiseasePrediction />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/patient/account"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <AccountComponent />
+              </ProtectedLayout>
             </ProtectedRoute>
           }
         />
       </Routes>
     </Router>
   );
+};
+
+ProtectedLayout.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default App;

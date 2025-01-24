@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('token');
-  return isAuthenticated ? children : <Navigate to="/Doctor/login" />;
+  return isAuthenticated ? children : <Navigate to="/Patient/login" />;
 };
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
