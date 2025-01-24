@@ -1,24 +1,50 @@
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, Moon, Sun, LogIn, UserPlus } from 'lucide-react';
 
 const LandingPage = () => {
-  return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-500 to-blue-700 text-white">
-      <div className="max-w-lg w-full bg-opacity-80 bg-black p-8 rounded-lg shadow-lg text-center">
-        <h1 className="text-4xl font-bold mb-4 tracking-wide">Welcome to Our Healthcare Platform</h1>
-        <p className="text-lg mb-6 opacity-80">Choose your role to proceed</p>
+  const [darkMode, setDarkMode] = useState(true);
 
-        <div className="flex justify-between gap-6">
-          <a href="/doctor" target="_blank" rel="noopener noreferrer">
-            <button className="w-full py-3 px-6 bg-orange-500 text-white rounded-lg transform transition-transform hover:scale-105 hover:bg-orange-400 focus:outline-none">
-              Doctor
-            </button>
-          </a>
-          <a href="/patient" target="_blank" rel="noopener noreferrer">
-            <button className="w-full py-3 px-6 bg-green-500 text-white rounded-lg transform transition-transform hover:scale-105 hover:bg-green-400 focus:outline-none">
-              Patient
-            </button>
-          </a>
-        </div>
+  return (
+    <div className={`${darkMode ? 'dark' : ''}`}>
+      <div className="min-h-screen bg-gradient-to-r from-white to-white dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-white transition-colors duration-300">
+        {/* Island Navbar */}
+        <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl z-50">
+          <div className="bg-white/40 dark:bg-black/40 border-2 border-black dark:border-2 dark:border-white/40 backdrop-blur-lg rounded-2xl shadow-xl p-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-4">
+                <span className="font-bold text-xl text-green-600 tracking-wider">सmarth</span>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <button 
+                  onClick={() => setDarkMode(!darkMode)}
+                  className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  {darkMode ? <Sun className="text-yellow-400" /> : <Moon className="text-gray-800" />}
+                </button>
+                
+                <div className="flex space-x-2">
+                  <Link 
+                    to="/doctor" 
+                    className="flex items-center space-x-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+                  >
+                    <LogIn size={20} />
+                    <span>Doctor Login</span>
+                  </Link>
+                  <Link 
+                    to="/patient" 
+                    className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    <UserPlus size={20} />
+                    <span>Patient Login</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+
       </div>
     </div>
   );

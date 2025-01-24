@@ -77,26 +77,6 @@ const Home = () => {
           </div>
         </div>
       </animated.div>
-
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((service, index) => (
-            <AnimatedSection key={service.title} delay={index * 200}>
-              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center">
-                <div className="flex justify-center mb-4">
-                  {service.icon}
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-800">
-                  {service.title}
-                </h3>
-                <p className="text-gray-600">
-                  {service.description}
-                </p>
-              </div>
-            </AnimatedSection>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

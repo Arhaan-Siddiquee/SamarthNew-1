@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Footer from './components/Footer';
 import LoginComponent from './components/LoginSignup/LoginComponent';
 import SignupComponent from './components/LoginSignup/SignupComponent';
 import ProtectedRoute from './components/LoginSignup/ProtectedRoutes';
@@ -24,7 +23,6 @@ const ProtectedLayout = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col">
         <main className="flex-1">{children}</main>
-        <Footer />
       </div>
     </div>
   );
