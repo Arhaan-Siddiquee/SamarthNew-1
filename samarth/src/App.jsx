@@ -13,6 +13,7 @@ import Doctor from './DocPat/Doctor'; // Import the Doctor component
 import Patient from './DocPat/Patient'; // Import the Patient component
 import PropTypes from 'prop-types';
 import Navbar from './components/Navbar/Navbar';
+import Home2 from './pages/Home2';
 
 const ProtectedLayout = ({ children }) => {
   return (
@@ -53,7 +54,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <Home />
+                <Home2/>
               </ProtectedLayout>
             </ProtectedRoute>
           }

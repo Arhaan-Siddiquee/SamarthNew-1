@@ -21,7 +21,7 @@ const AccountComponent = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/Doctor/login');
   };
 
   return (
