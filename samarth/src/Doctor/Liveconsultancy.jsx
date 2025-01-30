@@ -1,186 +1,272 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Mic,
-  MicOff,
-  Video,
-  VideoOff,
-  Phone,
-  PhoneOff,
-  Send,
-  Sun,
-  Moon,
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, Users, Plus, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const LiveConsultation = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-
-  const [isCameraOn, setIsCameraOn] = useState(true);
-  const [isMicOn, setIsMicOn] = useState(true);
-  const [isCallActive, setIsCallActive] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: "Dr. Smith", content: "Hello! How are you feeling today?" },
-    { sender: "Patient", content: "Hi Doctor, I've been experiencing some headaches." },
-  ]);
-  const [notes, setNotes] = useState("Patient reports recurring headaches. Frequency: 3-4 times per week.");
-  const [activeTab, setActiveTab] = useState("chat");
-  const [newMessage, setNewMessage] = useState("");
-
-  const localVideoRef = useRef(null);
-  const remoteVideoRef = useRef(null);
-  const peerConnection = useRef(null);
-  const localStream = useRef(null);
+const AppointmentManagement = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showAddSlot, setShowAddSlot] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
-    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    return () => {
-      if (localStream.current) {
-        localStream.current.getTracks().forEach((track) => track.stop());
-      }
-      if (peerConnection.current) {
-        peerConnection.current.close();
-      }
-    };
+    // Get the saved theme from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      // Default to light mode if no saved preference
+      setIsDarkMode(false);
+    }
   }, []);
 
-  const startCall = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      localStream.current = stream;
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
+  useEffect(() => {
+    // Save the theme preference to localStorage
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
-      peerConnection.current = new RTCPeerConnection();
-      stream.getTracks().forEach((track) => peerConnection.current.addTrack(track, stream));
+  // Sample data
+  const appointments = [
+    {
+      id: 1,
+      patientName: 'John Doe',
+      time: '09:00 AM',
+      type: 'Regular Checkup',
+      status: 'Confirmed',
+      duration: '30 min',
+      date: '2025-01-30',
+    },
+    {
+      id: 2,
+      patientName: 'Sarah Smith',
+      time: '10:30 AM',
+      type: 'Follow-up',
+      status: 'Pending',
+      duration: '45 min',
+      date: '2025-01-31',
+    },
+  ];
 
-      peerConnection.current.ontrack = (event) => {
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = event.streams[0];
-        }
-      };
+  const availableSlots = [
+    { id: 1, day: 'Monday', startTime: '09:00', endTime: '17:00' },
+    { id: 2, day: 'Tuesday', startTime: '10:00', endTime: '18:00' },
+    { id: 3, day: 'Wednesday', startTime: '09:00', endTime: '16:00' },
+  ];
 
-      setIsCallActive(true);
-    } catch (error) {
-      console.error("Error accessing media devices:", error);
-    }
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const days = new Date(year, month + 1, 0).getDate();
+    return Array.from({ length: days }, (_, i) => new Date(year, month, i + 1));
   };
 
-  const endCall = () => {
-    if (localStream.current) {
-      localStream.current.getTracks().forEach((track) => track.stop());
-    }
-    if (peerConnection.current) {
-      peerConnection.current.close();
-    }
-    setIsCallActive(false);
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    });
   };
 
-  const toggleCamera = () => {
-    if (localStream.current) {
-      localStream.current.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
-    }
-    setIsCameraOn((prev) => !prev);
-  };
-
-  const toggleMic = () => {
-    if (localStream.current) {
-      localStream.current.getAudioTracks().forEach((track) => (track.enabled = !track.enabled));
-    }
-    setIsMicOn((prev) => !prev);
-  };
-
-  const sendMessage = () => {
-    if (newMessage.trim() !== "") {
-      setMessages([...messages, { sender: "Patient", content: newMessage }]);
-      setNewMessage("");
-    }
+  const getAppointmentsForDay = (day) => {
+    return appointments.filter((appointment) => new Date(appointment.date).toDateString() === new Date(day).toDateString());
   };
 
   return (
-    <div className={`min-h-screen p-6 flex justify-center items-center transition-all ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-      <div className={`w-full max-w-6xl p-6 rounded-3xl shadow-lg space-y-6 ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
-        {/* Header */}
-        <div className={`flex justify-between items-center p-4 shadow-md rounded-2xl ${isDarkMode ? "bg-gray-700 text-white" : "bg-white"}`}>
-          <div>
-            <h1 className="text-3xl font-bold">Live Consultation</h1>
-            <p className="text-sm">{isDarkMode ? "Dark Mode Enabled" : "Light Mode Enabled"}</p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button
-              className={`p-3 rounded-full transition ${isDarkMode ? "bg-gray-600 text-white" : "bg-gray-200 text-gray-800"}`}
-              onClick={() => setIsDarkMode((prev) => !prev)}
-            >
-              {isDarkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-            </button>
-            <button
-              className={`px-5 py-2 flex items-center gap-2 rounded-full transition-all ${
-                isCallActive ? "bg-red-500 text-white hover:bg-red-600" : "bg-blue-500 text-white hover:bg-blue-600"
-              }`}
-              onClick={isCallActive ? endCall : startCall}
-            >
-              {isCallActive ? <PhoneOff className="h-5 w-5" /> : <Phone className="h-5 w-5" />}
-              {isCallActive ? "End Call" : "Start Call"}
-            </button>
-          </div>
-        </div>
-
-        {/* Main Section */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Video Section */}
-          <div className="col-span-2 space-y-6">
-            <div className={`p-6 rounded-2xl shadow-lg ${isDarkMode ? "bg-gray-700" : "bg-white"}`}>
-              <div className="aspect-video bg-gray-900 rounded-2xl relative flex items-center justify-center">
-                <video ref={localVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full rounded-2xl" />
-                <video ref={remoteVideoRef} autoPlay playsInline className="absolute bottom-4 right-4 w-40 h-28 bg-gray-800 rounded-xl shadow-md" />
+    <div className={isDarkMode ? 'dark' : ''}>
+      <div className={`min-h-screen p-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-50 text-gray-900'}`}>
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6 dark:bg-gray-700 dark:text-white">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-2xl font-bold">Appointment Management</h1>
+                <p className="text-gray-500 dark:text-gray-400">Manage your schedule and appointments</p>
               </div>
-
-              <div className="flex justify-center space-x-6 mt-4">
-                <button className={`p-3 rounded-full transition ${isCameraOn ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-800"}`} onClick={toggleCamera}>
-                  {isCameraOn ? <Video className="h-6 w-6" /> : <VideoOff className="h-6 w-6" />}
-                </button>
-                <button className={`p-3 rounded-full transition ${isMicOn ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-800"}`} onClick={toggleMic}>
-                  {isMicOn ? <Mic className="h-6 w-6" /> : <MicOff className="h-6 w-6" />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Chat & Notes */}
-          <div className={`col-span-1 p-6 rounded-2xl shadow-lg ${isDarkMode ? "bg-gray-700" : "bg-white"}`}>
-            <div className="flex border-b">
-              <button className={`flex-1 px-4 py-2 text-lg transition-all ${activeTab === "chat" ? "border-b-4 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("chat")}>
-                Chat
-              </button>
-              <button className={`flex-1 px-4 py-2 text-lg transition-all ${activeTab === "notes" ? "border-b-4 border-blue-500 font-bold" : ""}`} onClick={() => setActiveTab("notes")}>
-                Notes
+              <button
+                onClick={() => setShowAddSlot(true)}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600"
+              >
+                <Plus className="h-4 w-4" />
+                Add Time Slot
               </button>
             </div>
-            {activeTab === "chat" ? (
-              <div className="space-y-3 text-black mt-4">
-                {messages.map((msg, index) => (
-                  <div key={index} className="p-3 rounded-lg bg-gray-200 text-black">
-                    <strong>{msg.sender}: </strong> {msg.content}
+          </div>
+
+          {/* Theme Toggle Button */}
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="bg-gray-200 p-2 rounded-full dark:bg-gray-600 dark:text-white"
+            >
+              {isDarkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+            </button>
+          </div>
+
+          {/* Main Content */}
+          <div className="grid grid-cols-12 gap-6">
+            {/* Calendar Section */}
+            <div className="col-span-8">
+              <div className="bg-white rounded-lg shadow-sm p-6 dark:bg-gray-700">
+                {/* Calendar Navigation */}
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    {selectedDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                  </h2>
+                  <div className="flex gap-2">
+                    <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg">
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg">
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
                   </div>
-                ))}
-                <input className="w-full p-2 border text-black rounded" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
-                <button className="mt-2 p-2 bg-blue-500 text-black rounded" onClick={sendMessage}>
-                  <Send />
-                </button>
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 gap-2">
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                    <div key={day} className="text-center font-medium py-2">{day}</div>
+                  ))}
+                  {getDaysInMonth(selectedDate).map((date, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedDate(date)}
+                      className={`p-2 rounded-lg hover:bg-blue-50 relative ${
+                        date.toDateString() === new Date().toDateString() ? 'bg-blue-500 text-white' : ''
+                      }`}
+                    >
+                      {date.getDate()}
+                      {getAppointmentsForDay(date).length > 0 && (
+                        <span className="absolute bottom-1 right-1 w-1 h-1 bg-blue-500 rounded-full"></span>
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
-            ) : (
-              <textarea className="w-full h-40 p-4 border text-black rounded-lg resize-none" value={notes} onChange={(e) => setNotes(e.target.value)} />
-            )}
+
+              {/* Today's Schedule */}
+              <div className="bg-white rounded-lg shadow-sm p-6 mt-6 dark:bg-gray-700">
+                <h2 className="text-xl font-semibold mb-4">Appointments for {formatDate(selectedDate)}</h2>
+                <div className="space-y-4">
+                  {getAppointmentsForDay(selectedDate).length > 0 ? (
+                    getAppointmentsForDay(selectedDate).map((appointment) => (
+                      <div key={appointment.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <Users className="h-5 w-5 text-blue-500" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{appointment.patientName}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{appointment.type}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="font-medium">{appointment.time}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{appointment.duration}</p>
+                          </div>
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm ${
+                              appointment.status === 'Confirmed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            {appointment.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No appointments for this day.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Side Panel */}
+            <div className="col-span-4">
+              {/* Available Time Slots */}
+              <div className="bg-white rounded-lg shadow-sm p-6 dark:bg-gray-700">
+                <h2 className="text-xl font-semibold mb-4">Available Time Slots</h2>
+                <div className="space-y-3">
+                  {availableSlots.map((slot) => (
+                    <div key={slot.id} className="p-3 border rounded-lg dark:border-gray-600">
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-medium">{slot.day}</h3>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {slot.startTime} - {slot.endTime}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-white rounded-lg shadow-sm p-6 mt-6 dark:bg-gray-700">
+                <h2 className="text-xl font-semibold mb-4">Quick Stats</h2>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="p-4 bg-blue-100 rounded-lg dark:bg-blue-800 text-center">
+                    <h3 className="font-medium">Today's Appointments</h3>
+                    <p className="text-lg">5</p>
+                  </div>
+                  <div className="p-4 bg-green-100 rounded-lg dark:bg-green-800 text-center">
+                    <h3 className="font-medium">Completed</h3>
+                    <p className="text-lg">3</p>
+                  </div>
+                  <div className="p-4 bg-yellow-100 rounded-lg dark:bg-yellow-800 text-center">
+                    <h3 className="font-medium">Pending</h3>
+                    <p className="text-lg">1</p>
+                  </div>
+                  <div className="p-4 bg-red-100 rounded-lg dark:bg-red-800 text-center">
+                    <h3 className="font-medium">Canceled</h3>
+                    <p className="text-lg">1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Add Slot Modal */}
+          {showAddSlot && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white rounded-lg p-6 shadow-lg dark:bg-gray-700">
+                <h3 className="text-xl font-semibold mb-4">Add Time Slot</h3>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">Day</label>
+                  <select className="w-full p-2 border rounded-lg">
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">Start Time</label>
+                  <input type="time" className="w-full p-2 border rounded-lg" />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">End Time</label>
+                  <input type="time" className="w-full p-2 border rounded-lg" />
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                    onClick={() => setShowAddSlot(false)}
+                  >
+                    <Check className="h-4 w-4 inline-block" />
+                    Save Slot
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default LiveConsultation;
+export default AppointmentManagement;
