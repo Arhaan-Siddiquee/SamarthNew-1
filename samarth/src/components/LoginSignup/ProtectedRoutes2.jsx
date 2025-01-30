@@ -2,12 +2,12 @@
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute2 = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('token');
   return isAuthenticated ? children : <Navigate to="/Patient/login" />;
 };
-ProtectedRoute.propTypes = {
+ProtectedRoute2.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default ProtectedRoute;
+export default ProtectedRoute2;

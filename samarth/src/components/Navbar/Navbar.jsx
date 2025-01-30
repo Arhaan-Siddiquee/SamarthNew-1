@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { Bell, User, Moon, Sun, Menu, Home, AlertCircle, MessageCircle, Activity } from "lucide-react";
 
 const navLinks = [
-  { name: "Home", path: "/doctor", icon: <Home className="h-5 w-5 mr-2" />, isEmergency: false },
-  { name: "Emergency", path: "/doctor/emergency-services", icon: <AlertCircle className="h-5 w-5 mr-2" />, isEmergency: true },
-  { name: "SpecialtyAIPage", path: "/doctor/real-time-queue", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
-  { name: "Chatbot", path: "/doctor/chatbot", icon: <MessageCircle className="h-5 w-5 mr-2" />, isEmergency: false },
-  { name: "Disease Prediction", path: "/doctor/disease-prediction", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
+  { name: "Home", path: "/patient", icon: <Home className="h-5 w-5 mr-2" />, isEmergency: false },
+  { name: "Emergency", path: "/patient/emergency-services", icon: <AlertCircle className="h-5 w-5 mr-2" />, isEmergency: true },
+  { name: "SpecialtyAIPage", path: "/patient/real-time-queue", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
+  { name: "Chatbot", path: "/patient/chatbot", icon: <MessageCircle className="h-5 w-5 mr-2" />, isEmergency: false },
+  { name: "Disease Prediction", path: "/patient/disease-prediction", icon: <Activity className="h-5 w-5 mr-2" />, isEmergency: false },
 ];
 
 const Navbar = () => {
@@ -129,7 +129,7 @@ const Navbar = () => {
           )}
         </button>
 
-        <Link to="/doctor/account">
+        <Link to="/patient/account">
           <button className="flex items-center p-2 border border-white/30 text-white hover:bg-white/10 transition">
             <User className="h-4 w-4 mr-2" />
             <span className="text-sm">Account</span>

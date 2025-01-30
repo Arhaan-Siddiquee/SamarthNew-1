@@ -14,13 +14,19 @@ import Patient from './DocPat/Patient'; // Import the Patient component
 import PropTypes from 'prop-types';
 import Navbar from './components/Navbar/Navbar';
 import Home2 from './pages/Home2';
+import Navbar2 from './components/Navbar/Navbar2';
+import AppointmentManagement from './Doctor/AppointmentManage';
+import LiveConsultation from './Doctor/Liveconsultancy';
+import MyPatients from './Doctor/MyPatients';
+import SOSPage from './pages/EmergencyServices';
+import SosPatient from './Doctor/SosOfPatients';
 
 const ProtectedLayout = ({ children }) => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Left Navbar */}
-      <Navbar />
-
+      <Navbar/>
+  
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col">
         <main className="flex-1">{children}</main>
@@ -54,47 +60,52 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+                <Navbar2/>
                 <Home2/>
               </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/doctor/emergency-services"
+          path="/doctor/live-consultation"
           element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <EmergencyServices />
+              <Navbar2/>
+                <AppointmentManagement/>
               </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/doctor/real-time-queue"
+          path="/doctor/appointment-management"
           element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <SpecialtyAIPage />
+              <Navbar2/>
+                <LiveConsultation />
               </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/doctor/chatbot"
+          path="/doctor/my-patients"
           element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <Chatbot />
+                <Navbar2/>
+                <MyPatients />
               </ProtectedLayout>
             </ProtectedRoute>
           }
         />
         <Route
-          path="/doctor/disease-prediction"
+          path="/doctor/sos"
           element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <DiseasePrediction />
+                <Navbar2/>
+                <SosPatient />
               </ProtectedLayout>
             </ProtectedRoute>
           }
@@ -104,6 +115,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+              <Navbar2/>
                 <AccountComponent />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -117,6 +129,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+                <Navbar/>
                 <Home />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -127,6 +140,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+              <Navbar/>
                 <EmergencyServices />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -137,6 +151,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+              <Navbar/>
                 <SpecialtyAIPage />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -147,6 +162,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+              <Navbar/>
                 <Chatbot />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -157,6 +173,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+              <Navbar/>
                 <DiseasePrediction />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -167,6 +184,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <ProtectedLayout>
+              <Navbar/>
                 <AccountComponent />
               </ProtectedLayout>
             </ProtectedRoute>
@@ -180,5 +198,4 @@ const App = () => {
 ProtectedLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
 export default App;
