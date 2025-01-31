@@ -18,7 +18,6 @@ import Navbar2 from './components/Navbar/Navbar2';
 import AppointmentManagement from './Doctor/AppointmentManage';
 import LiveConsultation from './Doctor/Liveconsultancy';
 import MyPatients from './Doctor/MyPatients';
-import SOSPage from './pages/EmergencyServices';
 import SosPatient from './Doctor/SosOfPatients';
 
 const ProtectedLayout = ({ children }) => {
