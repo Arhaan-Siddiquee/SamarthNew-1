@@ -233,17 +233,43 @@ const LandingPage = () => {
             <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
-                  { value: "10k+", label: "Active Users" },
-                  { value: "500+", label: "Expert Doctors" },
-                  { value: "98%", label: "Success Rate" }
-                ].map((stat, index) => (
-                  <div key={index} className="text-center group">
-                    <div className="text-5xl font-black bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent mb-2 transform transition-transform duration-300 group-hover:scale-110">
-                      {stat.value}
+                  { value: 10000, display: "10k", label: "Active Users" },
+                  { value: 500, display: "500+", label: "Expert Doctors" },
+                  { value: 98, display: "98%", label: "Success Rate" }
+                ].map((stat, index) => {
+                  const [count, setCount] = useState(0);
+
+                  useEffect(() => {
+                    const duration = 2000;
+                    const startTime = Date.now();
+
+                    const updateCount = () => {
+                      const currentTime = Date.now();
+                      const elapsed = currentTime - startTime;
+                      
+                      if (elapsed < duration) {
+                        const progress = elapsed / duration;
+                        // Easing function for smooth animation
+                        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                        setCount(Math.floor(stat.value * easeOutQuart));
+                        requestAnimationFrame(updateCount);
+                      } else {
+                        setCount(stat.value);
+                      }
+                    };
+
+                    requestAnimationFrame(updateCount);
+                  }, [stat.value]);
+
+                  return (
+                    <div key={index} className="text-center group">
+                      <div className="text-5xl font-black bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent mb-2 transform transition-transform duration-300 group-hover:scale-110">
+                        {stat.display.replace(/\d+/, count)}
+                      </div>
+                      <div className="text-gray-600 dark:text-gray-300">{stat.label}</div>
                     </div>
-                    <div className="text-gray-600 dark:text-gray-300">{stat.label}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
